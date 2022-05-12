@@ -2,3 +2,7 @@
   box-sizing: border-box;
   text-decoration: none;
 }
+::-webkit-scrollbar{
+  height: 0px;
+  width: 0px;
+}
