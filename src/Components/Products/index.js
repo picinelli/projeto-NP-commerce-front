@@ -1,21 +1,19 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
 import { ThreeDots } from "react-loader-spinner";
 
-import Cart from "../../Assets/images/shopping-cart.png"
+import MyProductsContext from "../../context/MyProductsContext"
+
+import Cart from "../../Assets/images/shopping-cart.png";
 import Logo from "../../Assets/images/Logo.jpg";
 
 export default function Products() {
   const navigate = useNavigate();
+  const {myProducts, setMyProducts} = useContext(MyProductsContext)
+  const [products, setProducts] = useState([])
   const [disabled, setDisabled] = useState(false);
-  const [user, setUser] = useState({
-    name: "",
-    email: "",
-    password: "",
-    confirm: "",
-  });
 
   return (
     <Container>
@@ -24,29 +22,96 @@ export default function Products() {
         <CartWrapper>
           <img src={Cart} alt="Cart" />
           <p>Carrinho</p>
-          <QuantityWrapper>
-            1
-          </QuantityWrapper>
+          <LoadQuantity />
         </CartWrapper>
       </Header>
       <Wrapper>
-      <ProductWrapper>
-        <img src="https://fakestoreapi.com/img/71YAIFU48IL._AC_UL640_QL65_ML3_.jpg" alt="product"></img>
-        <h2>Camiseta feminina manga curtfawfasfwfasfaaaaaaaaaaaaaaaaaaaaaawfasfawfawfsafwasfwfawfa</h2>
-        <h3>R$121.04 <span>11% OFF</span></h3>
-        <h4>Frete Grátis</h4>
-        <BotaoComprar>Comprar</BotaoComprar>
-        <BotaoCarrinho>Carrinho+</BotaoCarrinho>
-      </ProductWrapper>
+        <ProductWrapper>
+          <img
+            src="https://fakestoreapi.com/img/71YAIFU48IL._AC_UL640_QL65_ML3_.jpg"
+            alt="product"
+          ></img>
+          <h2>
+            Camiseta feminina manga
+            curtfawfasfwfasfaaaaaaaaaaaaaaaaaaaaaawfasfawfawfsafwasfwfawfa
+          </h2>
+          <h3>
+            R$121.04 <span>11% OFF</span>
+          </h3>
+          <h4>Frete Grátis</h4>
+          <LoadButtons />
+        </ProductWrapper>
       </Wrapper>
     </Container>
   );
+
+  function goBuy() {
+    setDisabled(true);
+  }
+
+  function addCart() {
+    setDisabled(true);
+  }
+
+  function LoadQuantity() {
+    if(myProducts.length < 1) {
+      return <></>
+    }
+    return (
+      <QuantityWrapper>1</QuantityWrapper>
+    )
+  }
+
+  function LoadButtons() {
+    if (disabled === true) {
+      return (
+        <>
+          <BuyButton
+            onClick={() => {
+              goBuy();
+            }}
+            disabled
+          >
+            <ThreeDots width="50px" color="#FFF" />
+          </BuyButton>
+          <CartBuyButton
+            onClick={() => {
+              addCart();
+            }}
+            disabled
+          >
+            <ThreeDots width="50px" color="#FFF" />
+          </CartBuyButton>
+        </>
+      );
+    }
+
+    return (
+      <>
+        <BuyButton
+          onClick={() => {
+            goBuy();
+          }}
+        >
+          Comprar
+        </BuyButton>
+        <CartBuyButton
+          onClick={() => {
+            addCart();
+          }}
+        >
+          Carrinho+
+        </CartBuyButton>
+      </>
+    );
+  }
 }
 
 const Container = styled.div`
   background-color: #ededed;
   width: 100vw;
-
+  min-height: 100vh;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -83,7 +148,7 @@ const CartWrapper = styled.div`
     height: 30px;
     object-fit: cover;
   }
-`
+`;
 
 const QuantityWrapper = styled.div`
   position: absolute;
@@ -96,15 +161,14 @@ const QuantityWrapper = styled.div`
   background-color: red;
   top: 0;
   left: 7px;
-`
+  box-shadow: 0 0 8px 4px red;
+`;
 
 const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
   margin-top: 130px;
-
-  background-color: orange;
   max-width: 1200px;
   width: 100%;
   border-radius: 5px;
@@ -121,7 +185,7 @@ const ProductWrapper = styled.div`
   border-radius: 3px;
   width: 250px;
   height: 350px;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   margin: 10px 10px 10px 10px;
 
   img {
@@ -151,38 +215,46 @@ const ProductWrapper = styled.div`
   span {
     padding-left: 10px;
     font-size: 0.8rem;
-    color: #56BE82;
+    color: #56be82;
     font-weight: bold;
   }
 
   h4 {
-    color: #56BE82;
+    color: #56be82;
     font-weight: bold;
     padding-left: 10px;
   }
-`
+`;
 
-const BotaoComprar = styled.button`
+const BuyButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
   position: absolute;
   border: 0;
   border-radius: 5px;
-  background-color: #2968C8;
+  background-color: #2968c8;
   width: 110px;
   height: 40px;
   bottom: 10px;
   left: 10px;
   font-size: 1.2rem;
   font-weight: bold;
-`
+`;
 
-const BotaoCarrinho = styled.button`
+const CartBuyButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
   position: absolute;
   border: 0;
   border-radius: 5px;
-  background-color: #D8E7FA;
+  background-color: #d8e7fa;
   width: 110px;
   height: 40px;
   bottom: 10px;
   right: 10px;
-  font-size: 1.0rem;
-`
+  font-size: 1rem;
+`;
