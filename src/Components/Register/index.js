@@ -96,7 +96,7 @@ export default function Register() {
     return (
       <>
         <RegisterButton type="submit">Cadastrar!</RegisterButton>
-        <LoginButton>
+        <LoginButton onClick={() => {navigate("/")}}>
           Já tem uma conta? <span>Entre agora!</span>
         </LoginButton>
       </>

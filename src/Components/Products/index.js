@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
@@ -13,44 +13,78 @@ export default function Products() {
   const navigate = useNavigate();
   const {myProducts, setMyProducts} = useContext(MyProductsContext)
   const [products, setProducts] = useState([])
-  const [disabled, setDisabled] = useState(false);
+
+  useEffect(() => {
+    async function getProducts() {
+      try {
+        setProducts(await axios.get('http://localhost:5000/products'))
+      } catch(e) {
+        console.log(e)
+      }
+    }
+    getProducts()
+  }, [])
 
   return (
     <Container>
       <Header>
         <img src={Logo} alt="Logo" />
-        <CartWrapper>
+        <CartWrapper onClick={() => {navigate("/checkout")}}>
           <img src={Cart} alt="Cart" />
           <p>Carrinho</p>
           <LoadQuantity />
         </CartWrapper>
       </Header>
       <Wrapper>
-        <ProductWrapper>
-          <img
-            src="https://fakestoreapi.com/img/71YAIFU48IL._AC_UL640_QL65_ML3_.jpg"
-            alt="product"
-          ></img>
-          <h2>
-            Camiseta feminina manga
-            curtfawfasfwfasfaaaaaaaaaaaaaaaaaaaaaawfasfawfawfsafwasfwfawfa
-          </h2>
-          <h3>
-            R$121.04 <span>11% OFF</span>
-          </h3>
-          <h4>Frete Grátis</h4>
-          <LoadButtons />
-        </ProductWrapper>
+        <RenderProducts />
       </Wrapper>
     </Container>
   );
 
-  function goBuy() {
-    setDisabled(true);
+  function RenderProducts() {
+    if(products.length < 1) return <></>
+    return products.data.map((product) => {
+      let {image, title, price, id} = product
+      price = price.toString().replace(".", ",")
+        return (
+          <ProductWrapper key={id + title}>
+            <img
+              src={image}
+              alt="product"
+            ></img>
+            <h2>
+              {title}
+            </h2>
+            <h3>
+              R$ {price}<span>11% OFF</span>
+            </h3>
+            <h4>Frete Grátis</h4>
+            <BuyButton
+            onClick={() => {
+              goBuy(product);
+            }}
+          >
+            Comprar
+          </BuyButton>
+          <CartBuyButton
+            onClick={() => {
+              addCart(product);
+            }}
+          >
+            Carrinho+
+          </CartBuyButton>
+        </ProductWrapper>
+      )
+    })
   }
 
-  function addCart() {
-    setDisabled(true);
+  function goBuy(product) {
+    setMyProducts([...myProducts, product]);
+    navigate("/checkout")
+  }
+
+  function addCart(product) {
+    setMyProducts([...myProducts, product]);
   }
 
   function LoadQuantity() {
@@ -58,57 +92,14 @@ export default function Products() {
       return <></>
     }
     return (
-      <QuantityWrapper>1</QuantityWrapper>
+      <QuantityWrapper>{myProducts.length}</QuantityWrapper>
     )
-  }
-
-  function LoadButtons() {
-    if (disabled === true) {
-      return (
-        <>
-          <BuyButton
-            onClick={() => {
-              goBuy();
-            }}
-            disabled
-          >
-            <ThreeDots width="50px" color="#FFF" />
-          </BuyButton>
-          <CartBuyButton
-            onClick={() => {
-              addCart();
-            }}
-            disabled
-          >
-            <ThreeDots width="50px" color="#FFF" />
-          </CartBuyButton>
-        </>
-      );
-    }
-
-    return (
-      <>
-        <BuyButton
-          onClick={() => {
-            goBuy();
-          }}
-        >
-          Comprar
-        </BuyButton>
-        <CartBuyButton
-          onClick={() => {
-            addCart();
-          }}
-        >
-          Carrinho+
-        </CartBuyButton>
-      </>
-    );
   }
 }
 
 const Container = styled.div`
   background-color: #ededed;
+  padding-bottom: 100px;
   width: 100vw;
   min-height: 100vh;
   height: 100%;
@@ -119,6 +110,8 @@ const Container = styled.div`
 `;
 
 const Header = styled.header`
+  position: fixed;
+  z-index: 1;
   height: 80px;
   width: 100vw;
   padding: 0 40px 0 40px;
@@ -137,6 +130,7 @@ const Header = styled.header`
 `;
 
 const CartWrapper = styled.div`
+  cursor: pointer;
   position: relative;
   display: flex;
   align-items: center;
@@ -187,6 +181,7 @@ const ProductWrapper = styled.div`
   height: 350px;
   background-color: #ffffff;
   margin: 10px 10px 10px 10px;
+  padding: 10px 10px 10px 10px;
 
   img {
     border-radius: 3px 3px 0 0;
@@ -198,14 +193,12 @@ const ProductWrapper = styled.div`
   h2 {
     padding-top: 10px;
     color: gray;
-    padding-left: 10px;
-    padding-right: 10px;
     font-size: 0.9rem;
     word-break: break-all;
   }
 
   h3 {
-    padding: 10px 10px 10px 10px;
+    padding: 10px 0 10px 0;
     font-size: 1.5rem;
     color: #333333;
     display: flex;
@@ -222,7 +215,6 @@ const ProductWrapper = styled.div`
   h4 {
     color: #56be82;
     font-weight: bold;
-    padding-left: 10px;
   }
 `;
 
@@ -241,6 +233,12 @@ const BuyButton = styled.button`
   left: 10px;
   font-size: 1.2rem;
   font-weight: bold;
+
+  :active {
+  background-color: #0b53bf;
+  box-shadow: 0 2px #666;
+  transform: translateY(4px);
+  }
 `;
 
 const CartBuyButton = styled.button`
@@ -257,4 +255,10 @@ const CartBuyButton = styled.button`
   bottom: 10px;
   right: 10px;
   font-size: 1rem;
+
+  :active {
+  background-color: #adcdf7;
+  box-shadow: 0 2px #666;
+  transform: translateY(4px);
+  }
 `;
