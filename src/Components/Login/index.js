@@ -1,12 +1,12 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
 import { ThreeDots } from "react-loader-spinner";
-
+import { TokenContext } from "../../context/TokenContext";
 import Logo from "../../Assets/images/Logo.jpg";
-
 export default function Login() {
+  const {setToken}=useContext(TokenContext)
   const navigate = useNavigate();
   const [disabled, setDisabled] = useState(false);
   const [user, setUser] = useState({
@@ -47,18 +47,21 @@ export default function Login() {
     </Container>
   );
 
-  async function handleSubmit(e) {
+  function handleSubmit(e) {
     e.preventDefault();
     setDisabled(true);
-    try {
-      await axios.post("http://localhost:5000/register", user);
-      setDisabled(false);
-      navigate("/products");
-    } catch (e) {
-      setDisabled(false);
-      window.alert(e);
-      console.log(e);
-    }
+     const promise= axios.post("http://localhost:5000/sign-in", user);
+     promise.then((res)=>{
+      setToken(res.data)
+       setDisabled(false);
+       navigate("/products");
+     })
+     promise.catch((e)=>{
+       setDisabled(false);
+       window.alert(e);
+       console.log(e);
+     })
+    
   }
 
   function LoadButtons() {
@@ -78,8 +81,8 @@ export default function Login() {
       <>
         <RegisterButton type="submit">Entrar</RegisterButton>
         <LoginButton>
-          <Link to="/products">
-          Não tem uma conta? <span>faça agora!</span>
+          <Link to="/register">
+           <span className="color">Não tem uma conta?</span> <span>faça agora!</span>
           </Link>
         </LoginButton>
       </>
@@ -175,7 +178,9 @@ const LoginButton = styled.button`
   border: 0;
   margin-top: 20px;
   background-color: inherit;
-
+  .color{
+    color:black;
+  }
   span {
     color: blue;
   }
