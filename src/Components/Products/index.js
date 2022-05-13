@@ -7,6 +7,8 @@ import { ThreeDots } from "react-loader-spinner";
 import Cart from "../../Assets/images/shopping-cart.png";
 import Logo from "../../Assets/images/Logo.jpg";
 
+import { TokenContext } from "../../context/TokenContext";
+
 export default function Products() {
   const navigate = useNavigate();
   const [myProducts, setMyProducts] = useState([]);
@@ -87,20 +89,11 @@ export default function Products() {
           </h3>
           <h4>Frete Grátis</h4>
 
-          <BuyButton
-            onClick={() => {
-              goBuy();
-            }}
-            disabled
-          >
+          <BuyButton disabled>
             <ThreeDots width="50px" color="#FFF" />
           </BuyButton>
-          <CartBuyButton
-            onClick={() => {
-              addCart();
-            }}
-            disabled
-          >
+
+          <CartBuyButton disabled>
             <ThreeDots width="50px" color="#FFF" />
           </CartBuyButton>
         </ProductWrapper>
@@ -108,14 +101,47 @@ export default function Products() {
     });
   }
 
-  function goBuy(product) {
+  async function goBuy(product) {
+    setDisabled(true)
+    const token = localStorage.getItem('token');
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+    try {
+      await axios.post("http://localhost:5000/products", product, config)
+      setDisabled(false)
+    } catch(e) {
+      console.log(e)
+      setDisabled(false)
+    }
+
     setMyProducts([...myProducts, product]);
     navigate("/checkout");
   }
 
-  function addCart(product) {
-    console.log(product)
-    setMyProducts([...myProducts, product]);
+  async function addCart(product) {
+    setDisabled(true)
+    const token = localStorage.getItem('token');
+    console.log(token)
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+    try {
+      await axios.post("http://localhost:5000/products", product, config)
+      setDisabled(false)
+      setMyProducts([...myProducts, product]);
+    } catch(e) {
+      console.log(e)
+      setDisabled(false)
+      if(e.response.status === 401) {
+        return navigate("/")
+      }
+      return window.alert("Nao foi possivel adicionar o produto")
+    }
   }
 
   function LoadQuantity() {
