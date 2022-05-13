@@ -39,7 +39,7 @@ export default function Checkout() {
   )
   function ItemProducts({img,text,price}){
     const randomNumber=Math.random() * (-1 - 0) + 1;
-    const priceDescont=price*(1-randomNumber);
+    const priceDescont=price*(1-randomNumber.toFixed(2));
    return(
     <Products>
       <div className="leftImgName">
@@ -171,7 +171,7 @@ const Products = styled.div`
     margin-left:5px;
 }
   .duoSpan{
-    font-size: 100%;
+    font-size: 140%;
     font-weight: bold;
     font-family: "Roboto", sans-serif;
   }
