@@ -56,8 +56,8 @@ export default function Checkout() {
       <div className="rightPrice">
       <span className=""><s className="green">%{11}</s><s className="risco">R${price}</s></span>
       <span className="duoSpan blue">R${ priceDescont.toFixed(2)}</span>
-
       </div>
+      {/* // tenta aqui */}
     </Products>
    )
   }
