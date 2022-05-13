@@ -43,10 +43,10 @@ export default function Checkout() {
     )
   }
   function ItemProducts({img,text,price}){
-    const randomNumber=Math.random() * (-1 - 0) + 1;
-    const priceDescont=price*(1-0.11);
+    // const randomNumber=Math.random() * (-1 - 0) + 1;
     // randomNumber.toFixed(2)
     // randomNumber*100).toFixed(0)
+    const priceDescont=price*(1-0.11);
    return(
     <Products>
       <div className="leftImgName">
