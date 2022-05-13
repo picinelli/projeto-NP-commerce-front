@@ -53,6 +53,8 @@ export default function Login() {
     const promise = axios.post("http://localhost:5000/sign-in", user);
     promise.then((res) => {
       setToken(res.data);
+      JSON.stringify(localStorage.setItem('token', res.data.token))
+
       setDisabled(false);
       navigate("/products");
     });
