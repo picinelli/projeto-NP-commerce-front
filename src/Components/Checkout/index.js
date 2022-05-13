@@ -7,7 +7,8 @@ import { ThreeDots } from "react-loader-spinner";
 export default function Checkout() {
   const test="testinho"
   const dog="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTgolBdeaXdt7hZ4G28YiA8shOCg4jkBg08uA&usqp=CAU"
-  return (
+  const promise= axios.get("")
+   return (
     <>
     <Container>
       <Header>
@@ -56,8 +57,8 @@ export default function Checkout() {
       <div className="rightPrice">
       <span className=""><s className="green">%{11}</s><s className="risco">R${price}</s></span>
       <span className="duoSpan blue">R${ priceDescont.toFixed(2)}</span>
+      {/* <ion-icon name="trash"></ion-icon> */}
       </div>
-      {/* // tenta aqui */}
     </Products>
    )
   }
