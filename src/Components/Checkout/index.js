@@ -44,7 +44,9 @@ export default function Checkout() {
   }
   function ItemProducts({img,text,price}){
     const randomNumber=Math.random() * (-1 - 0) + 1;
-    const priceDescont=price*(1-randomNumber.toFixed(2));
+    const priceDescont=price*(1-0.11);
+    // randomNumber.toFixed(2)
+    // randomNumber*100).toFixed(0)
    return(
     <Products>
       <div className="leftImgName">
@@ -52,7 +54,7 @@ export default function Checkout() {
       <h1>{text}</h1> 
       </div>
       <div className="rightPrice">
-      <span className=""><s className="green">%{(randomNumber*100).toFixed(0)}</s><s className="risco">R${price}</s></span>
+      <span className=""><s className="green">%{11}</s><s className="risco">R${price}</s></span>
       <span className="duoSpan blue">R${ priceDescont.toFixed(2)}</span>
 
       </div>
