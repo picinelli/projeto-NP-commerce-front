@@ -24,19 +24,24 @@ export default function Checkout() {
       <ItemProducts img={dog} text="gatin reverse" price="15.75"/>
       <ItemProducts img={dog} text="gatin reverse" price="15.75"/>
       <ItemProducts img={dog} text="gatin reverse" price="15.75"/>
-      
       </AllProducts>
-      <Footer>
-        <Price>
-          <span><h1>Subtotal:  </h1>  <h1>R$ 15.90</h1></span>
-        </Price>
-      <button>
-        Finalizar
-      </button>
-      </Footer>
+      <Footer  numberItems="15" />
     </Container>
     </>
   )
+  function Footer({numberItems}){
+    return(
+      <CssFooter>
+        <Price>
+          <span><h1>Total:<s className="numberItems">(items  {numberItems})</s>  </h1>  <h1 className="blue">R$ 15.90</h1></span>
+          <span></span>
+          </Price>
+        <button>
+          Finalizar
+        </button>
+      </CssFooter>
+    )
+  }
   function ItemProducts({img,text,price}){
     const randomNumber=Math.random() * (-1 - 0) + 1;
     const priceDescont=price*(1-randomNumber.toFixed(2));
@@ -48,7 +53,7 @@ export default function Checkout() {
       </div>
       <div className="rightPrice">
       <span className=""><s className="green">%{(randomNumber*100).toFixed(0)}</s><s className="risco">R${price}</s></span>
-      <span className="duoSpan">R${ priceDescont.toFixed(2)}</span>
+      <span className="duoSpan blue">R${ priceDescont.toFixed(2)}</span>
 
       </div>
     </Products>
@@ -63,19 +68,26 @@ max-width: 100%;
 width: 91%;
 height: 32px;
 margin: 1px auto;
+.numberItems{
+  margin-right: 5px;
+  font-family: "Roboto", sans-serif;
+    font-size: 80%;
+    font-weight: 400;
+
+}
 span{
   display: flex;
   font-size: 25px;
     font-weight: bold;
 }
 h1{
-  margin-right: 10px;
+  margin-right: 1px;
   font-family: "Roboto", sans-serif;
     font-size: 90%;
     font-weight: bold;
 }
 `
-const Footer = styled.footer`
+const CssFooter = styled.footer`
   height: 100px;
   width: 100vw;
   background-color: #FFFFFF;
@@ -175,15 +187,19 @@ const Products = styled.div`
     font-weight: bold;
     font-family: "Roboto", sans-serif;
   }
+ 
   `
 const Container = styled.div`
+
   background-color: #ededed;
   width: 100vw;
   height: 100vh;
   display: flex;
   flex-direction: column;
   font-family: "Roboto", sans-serif;
-  
+  .blue{
+    color: rgb(59, 59, 217);
+  }  
 `;
 const Header = styled.header`
   height: 80px;
