@@ -4,32 +4,35 @@ import styled from "styled-components";
 import axios from "axios";
 import { ThreeDots } from "react-loader-spinner";
 
-import MyProductsContext from "../../context/MyProductsContext"
-
 import Cart from "../../Assets/images/shopping-cart.png";
 import Logo from "../../Assets/images/Logo.jpg";
 
 export default function Products() {
   const navigate = useNavigate();
-  const {myProducts, setMyProducts} = useContext(MyProductsContext)
-  const [products, setProducts] = useState([])
+  const [myProducts, setMyProducts] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [disabled, setDisabled] = useState(false);
 
   useEffect(() => {
     async function getProducts() {
       try {
-        setProducts(await axios.get('http://localhost:5000/products'))
-      } catch(e) {
-        console.log(e)
+        setProducts(await axios.get("http://localhost:5000/products"));
+      } catch (e) {
+        console.log(e);
       }
     }
-    getProducts()
-  }, [])
+    getProducts();
+  }, []);
 
   return (
     <Container>
       <Header>
         <img src={Logo} alt="Logo" />
-        <CartWrapper onClick={() => {navigate("/checkout")}}>
+        <CartWrapper
+          onClick={() => {
+            navigate("/checkout");
+          }}
+        >
           <img src={Cart} alt="Cart" />
           <p>Carrinho</p>
           <LoadQuantity />
@@ -42,58 +45,84 @@ export default function Products() {
   );
 
   function RenderProducts() {
-    if(products.length < 1) return <></>
+    if (products.length < 1) return <></>;
     return products.data.map((product) => {
-      let {image, title, price, id} = product
-      price = price.toString().replace(".", ",")
+      let { image, title, price, id } = product;
+      price = price.toString().replace(".", ",");
+
+      if (disabled === false) {
         return (
           <ProductWrapper key={id + title}>
-            <img
-              src={image}
-              alt="product"
-            ></img>
-            <h2>
-              {title}
-            </h2>
+            <img src={image} alt="product"></img>
+            <h2>{title}</h2>
             <h3>
-              R$ {price}<span>11% OFF</span>
+              R$ {price}
+              <span>11% OFF</span>
             </h3>
             <h4>Frete Grátis</h4>
             <BuyButton
+              onClick={() => {
+                goBuy(product);
+              }}
+            >
+              Comprar
+            </BuyButton>
+            <CartBuyButton
+              onClick={() => {
+                addCart(product);
+              }}
+            >
+              Carrinho+
+            </CartBuyButton>
+          </ProductWrapper>
+        );
+      }
+      return (
+        <ProductWrapper key={id + title}>
+          <img src={image} alt="product"></img>
+          <h2>{title}</h2>
+          <h3>
+            R$ {price}
+            <span>11% OFF</span>
+          </h3>
+          <h4>Frete Grátis</h4>
+
+          <BuyButton
             onClick={() => {
-              goBuy(product);
+              goBuy();
             }}
+            disabled
           >
-            Comprar
+            <ThreeDots width="50px" color="#FFF" />
           </BuyButton>
           <CartBuyButton
             onClick={() => {
-              addCart(product);
+              addCart();
             }}
+            disabled
           >
-            Carrinho+
+            <ThreeDots width="50px" color="#FFF" />
           </CartBuyButton>
         </ProductWrapper>
-      )
-    })
+      );
+    });
   }
 
   function goBuy(product) {
     setMyProducts([...myProducts, product]);
-    navigate("/checkout")
+    navigate("/checkout");
   }
 
   function addCart(product) {
+    console.log(product)
     setMyProducts([...myProducts, product]);
   }
 
   function LoadQuantity() {
-    if(myProducts.length < 1) {
-      return <></>
+    if (myProducts.length < 1) {
+      return <></>;
     }
-    return (
-      <QuantityWrapper>{myProducts.length}</QuantityWrapper>
-    )
+    return <QuantityWrapper>{myProducts.length}</QuantityWrapper>;
   }
 }
 
@@ -235,9 +264,9 @@ const BuyButton = styled.button`
   font-weight: bold;
 
   :active {
-  background-color: #0b53bf;
-  box-shadow: 0 2px #666;
-  transform: translateY(4px);
+    background-color: #0b53bf;
+    box-shadow: 0 2px #666;
+    transform: translateY(4px);
   }
 `;
 
@@ -257,8 +286,8 @@ const CartBuyButton = styled.button`
   font-size: 1rem;
 
   :active {
-  background-color: #adcdf7;
-  box-shadow: 0 2px #666;
-  transform: translateY(4px);
+    background-color: #adcdf7;
+    box-shadow: 0 2px #666;
+    transform: translateY(4px);
   }
 `;

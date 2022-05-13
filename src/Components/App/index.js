@@ -7,14 +7,10 @@ import Products from '../Products'
 import Checkout from '../Checkout'
 import Done from '../Done'
 import TokenProvider from '../../context/TokenContext'
-import MyProductsContext from '../../context/MyProductsContext'
 
 export default function App() {
-  const [myProducts, setMyProducts] = useState([])
-
   return (
     <TokenProvider>
-    <MyProductsContext.Provider value={{myProducts, setMyProducts}}>
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Login />} />
@@ -24,7 +20,6 @@ export default function App() {
         <Route path="/done" element={<Done />} />
       </Routes>
     </BrowserRouter>
-    </MyProductsContext.Provider>
     </TokenProvider>
   )
 }
