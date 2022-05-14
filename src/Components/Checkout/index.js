@@ -1,10 +1,11 @@
 import styled from "styled-components";
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Logo from "../../Assets/images/Logo.jpg";
 import { ThreeDots } from "react-loader-spinner";
 export default function Checkout() {
+  const navigate = useNavigate();
   const [myproducts,setMyproducts]=useState([]);
   let totalPrice=0;
   const token=localStorage.getItem('token');
@@ -56,7 +57,9 @@ export default function Checkout() {
           <span><h1>Total:<s className="numberItems">(itens  {numberItems})</s>  </h1>  <h1 className="blue">R$ {price}</h1></span>
           <span></span>
           </Price>
-        <button>
+        <button onClick={()=>{
+          navigate("/done")
+        }}>
           Finalizar
         </button>
       </CssFooter>
@@ -64,7 +67,6 @@ export default function Checkout() {
   }
   function ItemProducts({img,text,price,id}){
     const priceDescont=price*(1-0.11);
-    // totalPrice+=parseInt(priceDescont).toFixed(2);
    return(
     <Products>
       <div className="leftImgName">
@@ -104,6 +106,7 @@ export default function Checkout() {
    }
 
   }
+  
 }
 const Title=styled.div`
 width: 90%;
@@ -114,7 +117,6 @@ margin-bottom: 20px;
 margin-left:3.5%;
 h1{
   max-width:80%;
-    /* background-color: aqua; */
     font-family: "Roboto", sans-serif;
     margin-top:5%;
     margin-left: 15px;
@@ -129,7 +131,6 @@ justify-content: center;
 margin-bottom: 50px;
 h1{
   max-width:80%;
-    /* background-color: aqua; */
     font-family: "Roboto", sans-serif;
     margin-top:5%;
     margin-left: 15px;
@@ -171,8 +172,6 @@ const CssFooter = styled.footer`
   background-color: #FFFFFF;
   position: fixed;
   bottom: 0;
-  /* align-items: center;
-  justify-content: center; */
   -webkit-box-shadow: 0px 0px 16px 2px rgba(0, 0, 0, 0.43);
   box-shadow: 0px 0px 16px 2px rgba(0, 0, 0, 0.43);
   button{
@@ -207,7 +206,6 @@ const CssFooter = styled.footer`
 `;
 const AllProducts = styled.div`
 overflow: scroll;
-/* background-color: black; */
 margin-top:10px;
 margin-bottom: 100px;
 
@@ -224,7 +222,6 @@ const Products = styled.div`
   background-color: #ffffff;
   min-height: 50px;
   width: 90%;
-  /* border-radius: 5px; */
   button{
     width: 15px;
     height: 15px;
@@ -256,7 +253,6 @@ const Products = styled.div`
   }
   h1{
     max-width:100%;
-    /* background-color: aqua; */
     font-family: "Roboto", sans-serif;
     margin-top:5px;
     margin-left: 15px;
@@ -278,7 +274,6 @@ const Products = styled.div`
   .right{
     display: flex;
     justify-content: center;
-    /* align-items: center; */
   }
   .green{
     color:green;
@@ -316,7 +311,6 @@ const Header = styled.header`
   justify-content: center;
   -webkit-box-shadow: 0px 0px 16px 2px rgba(0, 0, 0, 0.43);
   box-shadow: 0px 0px 16px 2px rgba(0, 0, 0, 0.43);
-
   img {
     width: 180px;
     height: 60px;
