@@ -213,7 +213,8 @@ const QuantityWrapper = styled.div`
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background-color: #ff6666;
+  background-color: rgb(231, 221, 24);
+  box-shadow: 0px 0px 16px 2px rgba(0, 0, 0, 0.43);
   font-size: 14px;
   font-weight: bold;
   top: 0;
