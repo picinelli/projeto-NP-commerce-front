@@ -14,6 +14,7 @@ export default function Register() {
     email: "",
     password: "",
     confirm: "",
+    endereco: ""
   });
 
   return (
@@ -39,6 +40,15 @@ export default function Register() {
             value={user.email}
             onChange={(e) => {
               setUser({ ...user, email: e.target.value });
+            }}
+            required
+          />
+          <Input
+            placeholder="Endereço"
+            type="text"
+            value={user.endereco}
+            onChange={(e) => {
+              setUser({ ...user, endereco: e.target.value });
             }}
             required
           />
@@ -96,7 +106,11 @@ export default function Register() {
     return (
       <>
         <RegisterButton type="submit">Cadastrar!</RegisterButton>
-        <LoginButton onClick={() => {navigate("/")}}>
+        <LoginButton
+          onClick={() => {
+            navigate("/");
+          }}
+        >
           Já tem uma conta? <span>Entre agora!</span>
         </LoginButton>
       </>
