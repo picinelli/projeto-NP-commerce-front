@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
@@ -7,18 +7,23 @@ import { ThreeDots } from "react-loader-spinner";
 import Cart from "../../Assets/images/shopping-cart.png";
 import Logo from "../../Assets/images/Logo.jpg";
 
-import { TokenContext } from "../../context/TokenContext";
-
 export default function Products() {
   const navigate = useNavigate();
-  const [myProducts, setMyProducts] = useState([]);
+  const [myProducts, setMyProducts] = useState({data: []});
   const [products, setProducts] = useState([]);
   const [disabled, setDisabled] = useState(false);
 
   useEffect(() => {
+    const token = localStorage.getItem('token');
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
     async function getProducts() {
       try {
         setProducts(await axios.get("http://localhost:5000/products"));
+        setMyProducts(await axios.get("http://localhost:5000/myproducts", config));
       } catch (e) {
         console.log(e);
       }
@@ -111,20 +116,21 @@ export default function Products() {
     }
     try {
       await axios.post("http://localhost:5000/products", product, config)
+      setMyProducts(await axios.get("http://localhost:5000/myproducts", config));
       setDisabled(false)
     } catch(e) {
       console.log(e)
       setDisabled(false)
+      if(e.response.status === 401) {
+        return navigate("/")
+      }
     }
-
-    setMyProducts([...myProducts, product]);
     navigate("/checkout");
   }
 
   async function addCart(product) {
     setDisabled(true)
     const token = localStorage.getItem('token');
-    console.log(token)
     const config = {
       headers: {
         Authorization: `Bearer ${token}`
@@ -132,8 +138,8 @@ export default function Products() {
     }
     try {
       await axios.post("http://localhost:5000/products", product, config)
+      setMyProducts(await axios.get("http://localhost:5000/myproducts", config));
       setDisabled(false)
-      setMyProducts([...myProducts, product]);
     } catch(e) {
       console.log(e)
       setDisabled(false)
@@ -145,10 +151,10 @@ export default function Products() {
   }
 
   function LoadQuantity() {
-    if (myProducts.length < 1) {
+    if (myProducts.data.length < 1) {
       return <></>;
     }
-    return <QuantityWrapper>{myProducts.length}</QuantityWrapper>;
+    return <QuantityWrapper>{myProducts.data.length}</QuantityWrapper>;
   }
 }
 
@@ -207,10 +213,11 @@ const QuantityWrapper = styled.div`
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background-color: red;
+  background-color: #ff6666;
+  font-size: 14px;
+  font-weight: bold;
   top: 0;
   left: 7px;
-  box-shadow: 0 0 8px 4px red;
 `;
 
 const Wrapper = styled.div`
