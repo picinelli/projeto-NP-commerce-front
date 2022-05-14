@@ -1,29 +1,27 @@
 import styled from "styled-components";
 import axios from "axios";
-import { useState, useContext, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Logo from "../../Assets/images/Logo.jpg";
 import { ThreeDots } from "react-loader-spinner";
-import { useReducer } from "react/cjs/react.production.min";
 export default function Checkout() {
   const [myproducts,setMyproducts]=useState([]);
   let totalPrice=0;
-  const dog="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTgolBdeaXdt7hZ4G28YiA8shOCg4jkBg08uA&usqp=CAU"
-  useEffect(()=>{
-    const token=localStorage.getItem('token');
+  const token=localStorage.getItem('token');
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   };
+  useEffect(()=>{
   const promise= axios.get("http://localhost:5000/myproducts",config)
   promise.then((res)=>{
-    alert("deu certyo")
     setMyproducts(res.data)
+    console.log(res.data)
   })
   promise.catch((e)=>{
     console.log(e)
-    alert("my bad")
+    alert("ocorreu algum erro...")
   })
   },[])
    return (
@@ -39,7 +37,7 @@ export default function Checkout() {
       {myproducts.map((product,index)=>{
         totalPrice+= product.price;
        return(
-          <ItemProducts key={index+Date.now()} img={product.image} text={product.title} price={product.price}/>
+          <ItemProducts key={index+Date.now()} id={product.id}img={product.image} text={product.title} price={product.price}/>
        )
         })}
         <SubTotal>
@@ -55,7 +53,7 @@ export default function Checkout() {
     return(
       <CssFooter>
         <Price>
-          <span><h1>Total:<s className="numberItems">(items  {numberItems})</s>  </h1>  <h1 className="blue">R$ {price}</h1></span>
+          <span><h1>Total:<s className="numberItems">(itens  {numberItems})</s>  </h1>  <h1 className="blue">R$ {price}</h1></span>
           <span></span>
           </Price>
         <button>
@@ -64,7 +62,7 @@ export default function Checkout() {
       </CssFooter>
     )
   }
-  function ItemProducts({img,text,price}){
+  function ItemProducts({img,text,price,id}){
     const priceDescont=price*(1-0.11);
     // totalPrice+=parseInt(priceDescont).toFixed(2);
    return(
@@ -75,12 +73,36 @@ export default function Checkout() {
       </div>
       <h1>{text}</h1> 
       </div>
+      <div className="right">
       <div className="rightPrice">
       <span className=""><s className="green">%{11}</s><s className="risco">R${price}</s></span>
       <span className="duoSpan blue">R${ priceDescont.toFixed(2)}</span>
       </div>
+      <>
+      <button onClick={()=>{deleteProduct({id})}}>x</button>
+      </>
+      </div>
     </Products>
    )
+  }
+  async function deleteProduct({id}){
+   if(window.confirm("deseja realmente tirar do seu carrinho?")){
+     try{
+       await axios.delete(`http://localhost:5000/deletemyproducts/${id}`,config)
+       const promise= axios.get("http://localhost:5000/myproducts",config)
+          promise.then((res)=>{
+             setMyproducts(res.data)
+             console.log(res.data)
+          })
+          promise.catch((e)=>{
+             console.log(e)
+             alert("ocorreu algum erro...")
+          })
+     }catch(e){
+       alert("erro no sistema...tente novamente")
+     }
+   }
+
   }
 }
 const Title=styled.div`
@@ -188,13 +210,11 @@ overflow: scroll;
 /* background-color: black; */
 margin-top:10px;
 margin-bottom: 100px;
-/* margin-bottom: 100px; */
 
 `
 const Products = styled.div`
   &:last-child {
         margin-bottom: 300px;
-        /* color: red ;;;; */
     }
   display: flex;
   margin: auto;
@@ -205,6 +225,25 @@ const Products = styled.div`
   min-height: 50px;
   width: 90%;
   /* border-radius: 5px; */
+  button{
+    width: 15px;
+    height: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 700;
+    background-color:rgb(244, 116, 116);
+    border: none;
+    border-radius: 3px;
+    color: #ffffff;
+    cursor: pointer;
+;
+  }
+  button:hover{
+      transition: 0.6s;
+      background-color:rgb(241, 74, 74);
+
+    }
   img{
     width: 75%;
     height: 70%;
@@ -234,7 +273,12 @@ const Products = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-right: 50px;
+    margin-right: 30px;
+  }
+  .right{
+    display: flex;
+    justify-content: center;
+    /* align-items: center; */
   }
   .green{
     color:green;
