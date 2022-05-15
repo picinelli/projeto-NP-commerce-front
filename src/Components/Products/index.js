@@ -9,21 +9,25 @@ import Logo from "../../Assets/images/Logo.jpg";
 
 export default function Products() {
   const navigate = useNavigate();
-  const [myProducts, setMyProducts] = useState({data: []});
+  const [myProducts, setMyProducts] = useState({ data: [] });
   const [products, setProducts] = useState([]);
   const [disabled, setDisabled] = useState(false);
+  const [user, setUser] = useState("")
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     const config = {
       headers: {
-        Authorization: `Bearer ${token}`
-      }
-    }
+        Authorization: `Bearer ${token}`,
+      },
+    };
     async function getProducts() {
       try {
         setProducts(await axios.get("http://localhost:5000/products"));
-        setMyProducts(await axios.get("http://localhost:5000/myproducts", config));
+        setMyProducts(
+          await axios.get("http://localhost:5000/myproducts", config)
+        );
+        setUser(await axios.get("http://localhost:5000/user", config))
       } catch (e) {
         console.log(e);
       }
@@ -35,6 +39,7 @@ export default function Products() {
     <Container>
       <Header>
         <img src={Logo} alt="Logo" />
+        <h1>Bem vindo, {user.data} :&#41;</h1>
         <CartWrapper
           onClick={() => {
             navigate("/checkout");
@@ -107,46 +112,50 @@ export default function Products() {
   }
 
   async function goBuy(product) {
-    setDisabled(true)
-    const token = localStorage.getItem('token');
+    setDisabled(true);
+    const token = localStorage.getItem("token");
     const config = {
       headers: {
-        Authorization: `Bearer ${token}`
-      }
-    }
+        Authorization: `Bearer ${token}`,
+      },
+    };
     try {
-      await axios.post("http://localhost:5000/products", product, config)
-      setMyProducts(await axios.get("http://localhost:5000/myproducts", config));
-      setDisabled(false)
-    } catch(e) {
-      console.log(e)
-      setDisabled(false)
-      if(e.response.status === 401) {
-        return navigate("/")
+      await axios.post("http://localhost:5000/products", product, config);
+      setMyProducts(
+        await axios.get("http://localhost:5000/myproducts", config)
+      );
+      setDisabled(false);
+    } catch (e) {
+      console.log(e);
+      setDisabled(false);
+      if (e.response.status === 401) {
+        return navigate("/");
       }
     }
     navigate("/checkout");
   }
 
   async function addCart(product) {
-    setDisabled(true)
-    const token = localStorage.getItem('token');
+    setDisabled(true);
+    const token = localStorage.getItem("token");
     const config = {
       headers: {
-        Authorization: `Bearer ${token}`
-      }
-    }
+        Authorization: `Bearer ${token}`,
+      },
+    };
     try {
-      await axios.post("http://localhost:5000/products", product, config)
-      setMyProducts(await axios.get("http://localhost:5000/myproducts", config));
-      setDisabled(false)
-    } catch(e) {
-      console.log(e)
-      setDisabled(false)
-      if(e.response.status === 401) {
-        return navigate("/")
+      await axios.post("http://localhost:5000/products", product, config);
+      setMyProducts(
+        await axios.get("http://localhost:5000/myproducts", config)
+      );
+      setDisabled(false);
+    } catch (e) {
+      console.log(e);
+      setDisabled(false);
+      if (e.response.status === 401) {
+        return navigate("/");
       }
-      return window.alert("Nao foi possivel adicionar o produto")
+      return window.alert("Nao foi possivel adicionar o produto");
     }
   }
 
@@ -183,10 +192,31 @@ const Header = styled.header`
   -webkit-box-shadow: 0px 0px 16px 2px rgba(0, 0, 0, 0.43);
   box-shadow: 0px 0px 16px 2px rgba(0, 0, 0, 0.43);
 
+  h1 {
+    font-size: 1.3rem;
+    text-align: center;
+    padding-right: 60px;
+  }
+
   img {
     width: 180px;
     height: 60px;
     object-fit: cover;
+  }
+
+  @media (max-width: 800px) {
+    img {
+      width: 120px
+    }
+
+    h1 {
+      font-size: 1.0rem;
+      padding-right: 10px;
+    }
+  }
+
+  @media (max-width: 500px) {
+    padding: 0 5px 0 5px;
   }
 `;
 
@@ -202,6 +232,16 @@ const CartWrapper = styled.div`
     width: 30px;
     height: 30px;
     object-fit: cover;
+  }
+
+  @media (max-width: 800px) {
+    img {
+      width: 30px
+    }
+
+    p {
+      font-size: 0.8rem;
+    }
   }
 `;
 
@@ -224,6 +264,7 @@ const QuantityWrapper = styled.div`
 const Wrapper = styled.div`
   display: flex;
   justify-content: center;
+  align-items: center;
   flex-wrap: wrap;
   margin-top: 130px;
   max-width: 1200px;
