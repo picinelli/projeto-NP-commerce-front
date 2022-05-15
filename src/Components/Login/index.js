@@ -1,18 +1,49 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
 import { ThreeDots } from "react-loader-spinner";
 import { TokenContext } from "../../context/TokenContext";
 import Logo from "../../Assets/images/Logo.jpg";
+
+import "../../Assets/css/style.css"
+
 export default function Login() {
+  const inputEmailRef = useRef()
+  const inputPasswordRef = useRef()
   const { setToken } = useContext(TokenContext);
   const navigate = useNavigate();
   const [disabled, setDisabled] = useState(false);
+  const [allUsers, setAllUsers] = useState([])
   const [user, setUser] = useState({
     email: "",
     password: "",
   });
+  useEffect(() => {
+    async function getAllUsers() {
+      try {
+        setAllUsers(await axios.get("http://localhost:5000/all-users"))
+      } catch(e) {
+        console.log("Nao foi possivel buscar os usuarios")
+      }
+    }
+    getAllUsers()
+  }, [])
+
+  function validateEmailInput(input) {
+    const existentEmail = allUsers.data.find((user) => {
+      return (
+        user.email === input.current.value
+      )
+    })
+    if(existentEmail || input.current.value === "") {
+      input.current.classList.add("valid")
+      input.current.classList.remove("invalid")
+    } else {
+      input.current.classList.remove("valid")
+      input.current.classList.add("invalid")
+    }
+  }
 
   return (
     <Container>
@@ -23,21 +54,26 @@ export default function Login() {
         <h1>Login</h1>
         <Form onSubmit={handleSubmit}>
           <Input
+            className="valid"
             placeholder="Email"
             type="email"
             value={user.email}
             onChange={(e) => {
               setUser({ ...user, email: e.target.value });
             }}
+            ref={inputEmailRef}
+            onBlur={() => {validateEmailInput(inputEmailRef)}}
             required
           />
           <Input
+            className="valid"
             placeholder="Senha"
             type="password"
             value={user.password}
             onChange={(e) => {
               setUser({ ...user, password: e.target.value });
             }}
+            ref={inputPasswordRef}
             required
           />
 
@@ -53,7 +89,7 @@ export default function Login() {
     const promise = axios.post("http://localhost:5000/sign-in", user);
     promise.then((res) => {
       setToken(res.data);
-      JSON.stringify(localStorage.setItem('token', res.data.token))
+      JSON.stringify(localStorage.setItem("token", res.data.token));
 
       setDisabled(false);
       navigate("/products");
@@ -141,9 +177,7 @@ const Form = styled.form`
 `;
 
 const Input = styled.input`
-  border: 0;
   border-radius: 3px;
-  background-color: #efefef;
   width: 100%;
   height: 40px;
   margin-bottom: 30px;

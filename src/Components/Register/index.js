@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
@@ -7,8 +7,11 @@ import { ThreeDots } from "react-loader-spinner";
 import Logo from "../../Assets/images/Logo.jpg";
 
 export default function Register() {
+  const inputEmailRef = useRef()
+  const inputPasswordRef = useRef()
   const navigate = useNavigate();
   const [disabled, setDisabled] = useState(false);
+  const [allUsers, setAllUsers] = useState([])
   const [user, setUser] = useState({
     name: "",
     email: "",
@@ -16,6 +19,46 @@ export default function Register() {
     confirm: "",
     endereco: ""
   });
+
+  useEffect(() => {
+    async function getAllUsers() {
+      try {
+        setAllUsers(await axios.get("http://localhost:5000/all-users"))
+      } catch(e) {
+        console.log("Nao foi possivel buscar os usuarios")
+      }
+    }
+    getAllUsers()
+  }, [])
+
+  function validateEmailInput(input) {
+    const existentEmail = allUsers.data.find((user) => {
+      return (
+        user.email === input.current.value
+      )
+    })
+    if(existentEmail) {
+      input.current.classList.remove("valid")
+      input.current.classList.add("invalid")
+    } else {
+      input.current.classList.add("valid")
+      input.current.classList.remove("invalid")
+    }
+  }
+
+  function validatePasswordInput(e) {
+    if(e.target.value !== inputPasswordRef.current.value) {
+      inputPasswordRef.current.classList.add("invalid")
+      e.target.classList.add("invalid")
+      inputPasswordRef.current.classList.remove("valid")
+      e.target.classList.remove("valid")
+    } else {
+      inputPasswordRef.current.classList.add("valid")
+      e.target.classList.add("valid")
+      inputPasswordRef.current.classList.remove("invalid")
+      e.target.classList.remove("invalid")
+    }
+  }
 
   return (
     <Container>
@@ -26,6 +69,7 @@ export default function Register() {
         <h1>Cadastro</h1>
         <Form onSubmit={handleSubmit}>
           <Input
+            className="valid"
             placeholder="Nome"
             type="text"
             value={user.name}
@@ -35,15 +79,19 @@ export default function Register() {
             required
           />
           <Input
+            className="valid"
             placeholder="Email"
             type="email"
             value={user.email}
             onChange={(e) => {
               setUser({ ...user, email: e.target.value });
             }}
+            ref={inputEmailRef}
+            onBlur={() => {validateEmailInput(inputEmailRef)}}
             required
           />
           <Input
+            className="valid"
             placeholder="Endereço"
             type="text"
             value={user.endereco}
@@ -53,21 +101,25 @@ export default function Register() {
             required
           />
           <Input
+            className="valid"
             placeholder="Senha"
             type="password"
             value={user.password}
             onChange={(e) => {
               setUser({ ...user, password: e.target.value });
             }}
+            ref={inputPasswordRef}
             required
           />
           <Input
+            className="valid"
             placeholder="Confirme a senha"
             type="password"
             value={user.confirm}
             onChange={(e) => {
               setUser({ ...user, confirm: e.target.value });
             }}
+            onBlur={(e) => {validatePasswordInput(e)}}
             required
           />
           <LoadButtons />
@@ -167,9 +219,7 @@ const Form = styled.form`
 `;
 
 const Input = styled.input`
-  border: 0;
   border-radius: 3px;
-  background-color: #efefef;
   width: 100%;
   height: 40px;
   margin-bottom: 30px;
