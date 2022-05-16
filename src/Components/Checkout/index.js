@@ -56,7 +56,6 @@ export default function Checkout() {
           <span></span>
           </Price>
         <button onClick={()=>{
-         done({totalPrice,numberItems})
         }}>
           Finalizar
         </button>
