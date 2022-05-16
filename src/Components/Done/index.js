@@ -47,20 +47,6 @@ export default function Done() {
           <p key={index+Date.now()}>{prod.title}</p>
           )
         })}
-        
-        <h3>Total pago: R$ {totalPrice}</h3>
-
-        <div>
-          {myproducts.map((prod)=>{
-                    totalPrice+= prod.price;
-            return(
-              <>
-              <p>{prod.title}</p>
-              <hr></hr>
-              </>
-            )
-          })}
-        </div>
         <h3>Total pago: R$ {(totalPrice*0.89).toFixed(2)}</h3>
         <WrapperBottom>
           <Botao onClick={() => {navigate("/products")}}>Voltar</Botao>
