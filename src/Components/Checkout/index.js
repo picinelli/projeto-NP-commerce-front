@@ -3,7 +3,6 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Logo from "../../Assets/images/Logo.jpg";
-import xImage from "../../Assets/images/x.png";
 export default function Checkout() {
   const navigate = useNavigate();
   const [myproducts,setMyproducts]=useState([]);
@@ -32,7 +31,7 @@ export default function Checkout() {
       </Header>
       <AllProducts>
       <Title>
-        <h1>{myproducts.length===0?Cleancart():"Seus Produtos"}</h1>
+        <h1>{totalPrice===0 && myproducts.length===0?Cleancart({totalPrice,myproducts}):"Seus Produtos"}</h1>
       </Title>
       {myproducts.map((product,index)=>{
         totalPrice+= product.price;
@@ -65,7 +64,7 @@ export default function Checkout() {
     )
   }
   function done({totalPrice,numberItems}){
-    if(totalPrice ===0 || numberItems ===0){
+    if(totalPrice ===0 || myproducts.length ===0){
         alert("voce não comprou nada....")
         return;
       }else{
@@ -112,14 +111,10 @@ export default function Checkout() {
    }
 
   }
-  function Cleancart(){
+  function Cleancart({totalPrice,myproducts}){
       navigate("/products")
-    alert("voce ainda não colocou  nada no carrinho")
     return(
       <AllProducts>
-      <XX>
-        <img  src={xImage} alt="é um x"/>
-      </XX>
       </AllProducts>
     )
   }
