@@ -11,7 +11,6 @@ export default function Products() {
   const navigate = useNavigate();
   const [myProducts, setMyProducts] = useState({ data: [] });
   const [products, setProducts] = useState([]);
-  const [disabled, setDisabled] = useState(false);
   const [user, setUser] = useState("")
 
   useEffect(() => {
@@ -61,8 +60,6 @@ export default function Products() {
     return products.data.map((product) => {
       let { image, title, price, id } = product;
       price = price.toString().replace(".", ",");
-
-      if (disabled === false) {
         return (
           <ProductWrapper key={id + title}>
             <img src={image} alt="product"></img>
@@ -73,61 +70,43 @@ export default function Products() {
             </h3>
             <h4>Frete Grátis</h4>
             <BuyButton
-              onClick={() => {
-                goBuy(product);
+              onClick={(e) => {
+                goBuy(e, product);
               }}
             >
               Comprar
             </BuyButton>
             <CartBuyButton
-              onClick={() => {
-                addCart(product);
+              onClick={(e) => {
+                addCart(e, product);
               }}
             >
               Carrinho+
             </CartBuyButton>
           </ProductWrapper>
         );
-      }
-      return (
-        <ProductWrapper key={id + title}>
-          <img src={image} alt="product"></img>
-          <h2>{title}</h2>
-          <h3>
-            R$ {price}
-            <span>11% OFF</span>
-          </h3>
-          <h4>Frete Grátis</h4>
-
-          <BuyButton disabled>
-            <ThreeDots width="50px" color="#FFF" />
-          </BuyButton>
-
-          <CartBuyButton disabled>
-            <ThreeDots width="50px" color="#FFF" />
-          </CartBuyButton>
-        </ProductWrapper>
-      );
     });
   }
 
-  async function goBuy(product) {
-    setDisabled(true);
+  async function goBuy(e, product) {
+    e.target.setAttribute("disabled", "")
+    const today = Date.now();
+    product = {...product, today}
+
     const token = localStorage.getItem("token");
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     };
+
     try {
       await axios.post("http://localhost:5000/products", product, config);
       setMyProducts(
         await axios.get("http://localhost:5000/myproducts", config)
       );
-      setDisabled(false);
     } catch (e) {
       console.log(e);
-      setDisabled(false);
       if (e.response.status === 401) {
         return navigate("/");
       }
@@ -135,23 +114,25 @@ export default function Products() {
     navigate("/checkout");
   }
 
-  async function addCart(product) {
-    setDisabled(true);
+  async function addCart(e, product) {
+    e.target.setAttribute("disabled", "")
+    const today = Date.now();
+    product = {...product, today}
+
     const token = localStorage.getItem("token");
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     };
+
     try {
       await axios.post("http://localhost:5000/products", product, config);
       setMyProducts(
         await axios.get("http://localhost:5000/myproducts", config)
       );
-      setDisabled(false);
     } catch (e) {
       console.log(e);
-      setDisabled(false);
       if (e.response.status === 401) {
         return navigate("/");
       }
