@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
-import { ThreeDots } from "react-loader-spinner";
 
 import Cart from "../../Assets/images/shopping-cart.png";
 import Logo from "../../Assets/images/Logo.jpg";
@@ -187,12 +186,12 @@ const Header = styled.header`
 
   @media (max-width: 800px) {
     img {
-      width: 120px
+      width: 120px;
     }
 
     h1 {
       font-size: 1.0rem;
-      padding-right: 10px;
+      padding-right: 35px;
     }
   }
 
@@ -288,6 +287,8 @@ const ProductWrapper = styled.div`
     color: #333333;
     display: flex;
     align-items: center;
+    position: absolute;
+    bottom: 75px;
   }
 
   span {
@@ -300,6 +301,8 @@ const ProductWrapper = styled.div`
   h4 {
     color: #56be82;
     font-weight: bold;
+    position: absolute;
+    bottom: 65px;
   }
 `;
 
