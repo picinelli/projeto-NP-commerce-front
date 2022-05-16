@@ -71,10 +71,10 @@ export default function Done() {
            })
            promise.catch((e)=>{
               console.log(e)
-              alert("ocorreu algum erro...")
+              alert("ocorreu algum erro...");
            })
       }catch(e){
-        alert("erro no sistema...tente novamente")
+        alert("erro no sistema...tente novamente");
       }
  
    }
