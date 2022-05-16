@@ -56,6 +56,7 @@ export default function Checkout() {
           <span></span>
           </Price>
         <button onClick={()=>{
+          navigate("/done")
         }}>
           Finalizar
         </button>
