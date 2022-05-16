@@ -50,33 +50,13 @@ export default function Done() {
         <h3>Total pago: R$ {(totalPrice*0.89).toFixed(2)}</h3>
         <WrapperBottom>
           <Botao onClick={() => {
-            deleteProduct();
             navigate("/products")
             }}>Voltar</Botao>
         </WrapperBottom>
       </Wrapper>
     </Container>
   );
-  async function deleteProduct(){
 
-    if(window.confirm("deseja realmente tirar do seu carrinho?")){
-      try{
-        await axios.delete(`http://localhost:5000/deletemyproducts/100`,config)
-        const promise= axios.get("http://localhost:5000/myproducts",config)
-           promise.then((res)=>{
-              setMyproducts(res.data)
-              console.log(res.data)
-           })
-           promise.catch((e)=>{
-              console.log(e)
-              alert("ocorreu algum erro...")
-           })
-      }catch(e){
-        alert("erro no sistema...tente novamente")
-      }
-    }
- 
-   }
 }
 
 const Container = styled.div`
