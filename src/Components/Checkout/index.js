@@ -3,7 +3,6 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Logo from "../../Assets/images/Logo.jpg";
-import { ThreeDots } from "react-loader-spinner";
 export default function Checkout() {
   const navigate = useNavigate();
   const [myproducts,setMyproducts]=useState([]);
@@ -32,12 +31,12 @@ export default function Checkout() {
       </Header>
       <AllProducts>
       <Title>
-        <h1> Seus Produtos</h1>
+        <h1>{totalPrice===0 && myproducts.length===0?Cleancart({totalPrice,myproducts}):"Seus Produtos"}</h1>
       </Title>
       {myproducts.map((product,index)=>{
         totalPrice+= product.price;
        return(
-          <ItemProducts key={index+Date.now()} id={product.id}img={product.image} text={product.title} price={product.price}/>
+          <ItemProducts today={product.today} key={index+Date.now()+index+Date.now()} id={product.id}img={product.image} text={product.title} price={product.price}/>
        )
         })}
         <SubTotal>
@@ -57,15 +56,21 @@ export default function Checkout() {
           <span></span>
           </Price>
         <button onClick={()=>{
-          navigate("/done")
-
         }}>
           Finalizar
         </button>
       </CssFooter>
     )
   }
-  function ItemProducts({img,text,price,id}){
+  function done({totalPrice,numberItems}){
+    if(totalPrice ===0 || myproducts.length ===0){
+        alert("voce não comprou nada....")
+        return;
+      }else{
+      navigate("/done")
+      }
+  }
+  function ItemProducts({img,text,price,today}){
     const priceDescont=price*(1-0.11);
    return(
     <Products>
@@ -81,16 +86,16 @@ export default function Checkout() {
       <span className="duoSpan blue">R${ priceDescont.toFixed(2)}</span>
       </div>
       <>
-      <button onClick={()=>{deleteProduct({id})}}>x</button>
+      <button onClick={()=>{deleteProduct({today})}}>x</button>
       </>
       </div>
     </Products>
    )
   }
-  async function deleteProduct({id}){
+  async function deleteProduct({today}){
    if(window.confirm("deseja realmente tirar do seu carrinho?")){
      try{
-       await axios.delete(`http://localhost:5000/deletemyproducts/${id}`,config)
+       await axios.delete(`http://localhost:5000/deletemyproducts/${today}`,config)
        const promise= axios.get("http://localhost:5000/myproducts",config)
           promise.then((res)=>{
              setMyproducts(res.data)
@@ -105,8 +110,27 @@ export default function Checkout() {
    }
 
   }
+  function Cleancart({totalPrice,myproducts}){
+      navigate("/products")
+    return(
+      <AllProducts>
+      </AllProducts>
+    )
+  }
   
 }
+const XX=styled.div`
+width:300px;
+height:300px;
+z-index: 1;
+display: flex;
+justify-content: center;
+align-items: center;
+img{
+  width: 100%;
+  height: 100%;
+}
+`
 const Title=styled.div`
 width: 90%;
 display: flex;
