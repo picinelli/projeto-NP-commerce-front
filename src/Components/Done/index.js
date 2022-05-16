@@ -59,7 +59,7 @@ export default function Done() {
       </Wrapper>
     </Container>
   );
-}
+};
 
 const Container = styled.div`
   background-color: #ededed;
