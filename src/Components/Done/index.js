@@ -25,7 +25,6 @@ export default function Done() {
       alert("ocorreu algum erro...")
     })
     },[])
-
   return (
     <Container>
       <Header>
@@ -54,9 +53,8 @@ export default function Done() {
         <h3>Total pago: R$ {(totalPrice*0.89).toFixed(2)}</h3>
         <WrapperBottom>
           <Botao onClick={() => {
-            deleteProduct();
+            deleteProduct()
             navigate("/products")
-            
             }}>Voltar</Botao>
         </WrapperBottom>
       </Wrapper>
@@ -65,8 +63,8 @@ export default function Done() {
   async function deleteProduct(){
       try{
         await axios.delete(`http://localhost:5000/deletemyproducts/100`,config)
-        const promise= axios.get("http://localhost:5000/myproducts",config)
-           promise.then((res)=>{
+        const promise= await axios.get("http://localhost:5000/myproducts",config)
+        promise.then((res)=>{
               setMyproducts(res.data)
            })
            promise.catch((e)=>{
@@ -74,7 +72,7 @@ export default function Done() {
               alert("ocorreu algum erro...");
            })
       }catch(e){
-        alert("erro no sistema...tente novamente");
+        
       }
  
    }
