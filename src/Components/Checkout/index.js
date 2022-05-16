@@ -16,7 +16,7 @@ export default function Checkout() {
   useEffect(()=>{
   const promise= axios.get("http://localhost:5000/myproducts",config)
   promise.then((res)=>{
-    setMyproducts(res.data)
+    setMyproducts(res.data);
   })
   promise.catch((e)=>{
     console.log(e)
