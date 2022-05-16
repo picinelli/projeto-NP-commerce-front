@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import Logo from "../../Assets/images/Logo.jpg";
 import { ThreeDots } from "react-loader-spinner";
 import sgMail from "@sendgrid/mail";
+import xImage from "../../Assets/images/x.png";
 export default function Checkout() {
   // sgMail.setApiKey(process.env.SENDGRID_API_KEY);
   //   const msg = {
@@ -48,7 +49,6 @@ export default function Checkout() {
   const promise= axios.get("http://localhost:5000/myproducts",config)
   promise.then((res)=>{
     setMyproducts(res.data)
-    console.log(res.data)
   })
   promise.catch((e)=>{
     console.log(e)
@@ -63,12 +63,12 @@ export default function Checkout() {
       </Header>
       <AllProducts>
       <Title>
-        <h1> Seus Produtos</h1>
+        <h1>{myproducts.length===0?Cleancart():"Seus Produtos"}</h1>
       </Title>
       {myproducts.map((product,index)=>{
         totalPrice+= product.price;
        return(
-          <ItemProducts today={product.today} key={index+Date.now()} id={product.id}img={product.image} text={product.title} price={product.price}/>
+          <ItemProducts today={product.today} key={index+Date.now()+index+Date.now()} id={product.id}img={product.image} text={product.title} price={product.price}/>
        )
         })}
         <SubTotal>
@@ -88,12 +88,20 @@ export default function Checkout() {
           <span></span>
           </Price>
         <button onClick={()=>{
-          navigate("/done")
+         done({totalPrice,numberItems})
         }}>
           Finalizar
         </button>
       </CssFooter>
     )
+  }
+  function done({totalPrice,numberItems}){
+    if(totalPrice ===0 || numberItems ===0){
+        alert("voce não comprou nada....")
+        return;
+      }else{
+      navigate("/done")
+      }
   }
   function ItemProducts({img,text,price,today}){
     const priceDescont=price*(1-0.11);
@@ -124,7 +132,6 @@ export default function Checkout() {
        const promise= axios.get("http://localhost:5000/myproducts",config)
           promise.then((res)=>{
              setMyproducts(res.data)
-             console.log(res.data)
           })
           promise.catch((e)=>{
              console.log(e)
@@ -136,8 +143,31 @@ export default function Checkout() {
    }
 
   }
+  function Cleancart(){
+      navigate("/products")
+    alert("voce ainda não colocou  nada no carrinho")
+    return(
+      <AllProducts>
+      <XX>
+        <img  src={xImage} alt="é um x"/>
+      </XX>
+      </AllProducts>
+    )
+  }
   
 }
+const XX=styled.div`
+width:300px;
+height:300px;
+z-index: 1;
+display: flex;
+justify-content: center;
+align-items: center;
+img{
+  width: 100%;
+  height: 100%;
+}
+`
 const Title=styled.div`
 width: 90%;
 display: flex;

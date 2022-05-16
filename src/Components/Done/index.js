@@ -19,7 +19,6 @@ export default function Done() {
     const promise= axios.get("http://localhost:5000/myproducts",config)
     promise.then((res)=>{
       setMyproducts(res.data)
-      console.log(res.data)
     })
     promise.catch((e)=>{
       console.log(e)
@@ -42,19 +41,20 @@ export default function Done() {
         </WrapperTop>
         <h3>Produtos adquiridos:</h3>
         <div>
-          {myproducts.map((prod)=>{
+          {myproducts.map((prod,index)=>{
                     totalPrice+= prod.price;
             return(
-              <>
-              <p>{prod.title}</p>
-              <hr></hr>
-              </>
+              <div key={index+Date.now()+index+Date.now()}>
+              <p key={index+Date.now()+index+Date.now()}>{prod.title}</p>
+              <hr ></hr>
+              </div>
             )
           })}
         </div>
         <h3>Total pago: R$ {(totalPrice*0.89).toFixed(2)}</h3>
         <WrapperBottom>
           <Botao onClick={() => {
+            deleteProduct();
             navigate("/products")
             
             }}>Voltar</Botao>
@@ -62,6 +62,22 @@ export default function Done() {
       </Wrapper>
     </Container>
   );
+  async function deleteProduct(){
+      try{
+        await axios.delete(`http://localhost:5000/deletemyproducts/100`,config)
+        const promise= axios.get("http://localhost:5000/myproducts",config)
+           promise.then((res)=>{
+              setMyproducts(res.data)
+           })
+           promise.catch((e)=>{
+              console.log(e)
+              alert("ocorreu algum erro...")
+           })
+      }catch(e){
+        alert("erro no sistema...tente novamente")
+      }
+ 
+   }
 };
 
 const Container = styled.div`
