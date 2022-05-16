@@ -48,7 +48,6 @@ export default function Checkout() {
   const promise= axios.get("http://localhost:5000/myproducts",config)
   promise.then((res)=>{
     setMyproducts(res.data)
-    console.log(res.data)
   })
   promise.catch((e)=>{
     console.log(e)
@@ -89,6 +88,7 @@ export default function Checkout() {
           </Price>
         <button onClick={()=>{
           navigate("/done")
+
         }}>
           Finalizar
         </button>
@@ -124,7 +124,6 @@ export default function Checkout() {
        const promise= axios.get("http://localhost:5000/myproducts",config)
           promise.then((res)=>{
              setMyproducts(res.data)
-             console.log(res.data)
           })
           promise.catch((e)=>{
              console.log(e)

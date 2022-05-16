@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import axios from "axios";
 import { useState, useEffect } from "react";
+import axios from "axios";
 import Logo from "../../Assets/images/Logo.jpg";
 import DoneImage from "../../Assets/images/green-circle.png";
 
@@ -19,14 +19,13 @@ export default function Done() {
     const promise= axios.get("http://localhost:5000/myproducts",config)
     promise.then((res)=>{
       setMyproducts(res.data)
-      console.log(res.data)
+
     })
     promise.catch((e)=>{
       console.log(e)
       alert("ocorreu algum erro...")
     })
     },[])
-
   return (
     <Container>
       <Header>
@@ -41,6 +40,16 @@ export default function Done() {
           </h2>
         </WrapperTop>
         <h3>Produtos adquiridos:</h3>
+        
+        {myproducts.map((prod,index)=>{
+          totalPrice+= prod.price;
+          return(
+          <p key={index+Date.now()}>{prod.title}</p>
+          )
+        })}
+        
+        <h3>Total pago: R$ {totalPrice}</h3>
+
         <div>
           {myproducts.map((prod)=>{
                     totalPrice+= prod.price;
