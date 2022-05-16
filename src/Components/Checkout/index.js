@@ -68,7 +68,7 @@ export default function Checkout() {
       {myproducts.map((product,index)=>{
         totalPrice+= product.price;
        return(
-          <ItemProducts key={index+Date.now()} id={product.id}img={product.image} text={product.title} price={product.price}/>
+          <ItemProducts today={product.today} key={index+Date.now()} id={product.id}img={product.image} text={product.title} price={product.price}/>
        )
         })}
         <SubTotal>
@@ -95,7 +95,7 @@ export default function Checkout() {
       </CssFooter>
     )
   }
-  function ItemProducts({img,text,price,id}){
+  function ItemProducts({img,text,price,today}){
     const priceDescont=price*(1-0.11);
    return(
     <Products>
@@ -111,16 +111,16 @@ export default function Checkout() {
       <span className="duoSpan blue">R${ priceDescont.toFixed(2)}</span>
       </div>
       <>
-      <button onClick={()=>{deleteProduct({id})}}>x</button>
+      <button onClick={()=>{deleteProduct({today})}}>x</button>
       </>
       </div>
     </Products>
    )
   }
-  async function deleteProduct({id}){
+  async function deleteProduct({today}){
    if(window.confirm("deseja realmente tirar do seu carrinho?")){
      try{
-       await axios.delete(`http://localhost:5000/deletemyproducts/${id}`,config)
+       await axios.delete(`http://localhost:5000/deletemyproducts/${today}`,config)
        const promise= axios.get("http://localhost:5000/myproducts",config)
           promise.then((res)=>{
              setMyproducts(res.data)
