@@ -1,12 +1,31 @@
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
-
+import { useState, useEffect } from "react";
 import Logo from "../../Assets/images/Logo.jpg";
 import DoneImage from "../../Assets/images/green-circle.png";
 
 export default function Done() {
+  let totalPrice=0;
   const navigate = useNavigate();
+  const [myproducts,setMyproducts]=useState([]);
+  const token=localStorage.getItem('token');
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  useEffect(()=>{
+    const promise= axios.get("http://localhost:5000/myproducts",config)
+    promise.then((res)=>{
+      setMyproducts(res.data)
+      console.log(res.data)
+    })
+    promise.catch((e)=>{
+      console.log(e)
+      alert("ocorreu algum erro...")
+    })
+    },[])
 
   return (
     <Container>
@@ -22,17 +41,18 @@ export default function Done() {
           </h2>
         </WrapperTop>
         <h3>Produtos adquiridos:</h3>
-        <p>Mochila Foldsack - Fjallraven, Cabe 15 Laptops</p>
-        <p>Mochila Foldsack - Fjallraven, Cabe 15 Laptops</p>
-        <p>Mochila Foldsack - Fjallraven, Cabe 15 Laptops</p>
-        <p>Mochila Foldsack - Fjallraven, Cabe 15 Laptops</p>
-        <p>Mochila Foldsack - Fjallraven, Cabe 15 Laptops</p>
-        <p>Mochila Foldsack - Fjallraven, Cabe 15 Laptops</p>
-        <p>
-          Silicon Power 256GB SSD 3D NAND A55 SLC Cache Performance Boost SATA
-          III 2.5
-        </p>
-        <h3>Total pago: R$ 2.405,78</h3>
+        <div>
+          {myproducts.map((prod)=>{
+                    totalPrice+= prod.price;
+            return(
+              <>
+              <p>{prod.title}</p>
+              <hr></hr>
+              </>
+            )
+          })}
+        </div>
+        <h3>Total pago: R$ {(totalPrice*0.89).toFixed(2)}</h3>
         <WrapperBottom>
           <Botao onClick={() => {navigate("/products")}}>Voltar</Botao>
         </WrapperBottom>
