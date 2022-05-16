@@ -23,7 +23,7 @@ export default function Register() {
   useEffect(() => {
     async function getAllUsers() {
       try {
-        setAllUsers(await axios.get("http://localhost:5000/all-users"))
+        setAllUsers(await axios.get("https://projeto-np-commerce-back.herokuapp.com/all-users"))
       } catch(e) {
         console.log("Nao foi possivel buscar os usuarios")
       }
@@ -132,7 +132,7 @@ export default function Register() {
     e.preventDefault();
     setDisabled(true);
     try {
-      await axios.post("http://localhost:5000/register", user);
+      await axios.post("https://projeto-np-commerce-back.herokuapp.com/register", user);
       setDisabled(false);
       navigate("/");
     } catch (e) {

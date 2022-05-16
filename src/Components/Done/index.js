@@ -16,7 +16,7 @@ export default function Done() {
     },
   };
   useEffect(()=>{
-    const promise= axios.get("http://localhost:5000/myproducts",config)
+    const promise= axios.get("https://projeto-np-commerce-back.herokuapp.com/myproducts",config)
     promise.then((res)=>{
       setMyproducts(res.data)
     })
@@ -62,8 +62,8 @@ export default function Done() {
   );
   async function deleteProduct(){
       try{
-        await axios.delete(`http://localhost:5000/deletemyproducts/100`,config)
-        const promise= await axios.get("http://localhost:5000/myproducts",config)
+        await axios.delete(`https://projeto-np-commerce-back.herokuapp.com/deletemyproducts/100`,config)
+        const promise= await axios.get("https://projeto-np-commerce-back.herokuapp.com/myproducts",config)
         promise.then((res)=>{
               setMyproducts(res.data)
            })

@@ -14,7 +14,7 @@ export default function Checkout() {
     },
   };
   useEffect(()=>{
-  const promise= axios.get("http://localhost:5000/myproducts",config)
+  const promise= axios.get("https://projeto-np-commerce-back.herokuapp.com/myproducts",config)
   promise.then((res)=>{
     setMyproducts(res.data)
   })
@@ -96,8 +96,8 @@ export default function Checkout() {
   async function deleteProduct({today}){
    if(window.confirm("deseja realmente tirar do seu carrinho?")){
      try{
-       await axios.delete(`http://localhost:5000/deletemyproducts/${today}`,config)
-       const promise= axios.get("http://localhost:5000/myproducts",config)
+       await axios.delete(`https://projeto-np-commerce-back.herokuapp.com/deletemyproducts/${today}`,config)
+       const promise= axios.get("https://projeto-np-commerce-back.herokuapp.com/myproducts",config)
           promise.then((res)=>{
              setMyproducts(res.data)
           })
