@@ -7,3 +7,13 @@
   height: 0px;
   width: 0px;
 }
+
+.invalid {
+  background-color: #ffdddd;
+  border: 2px solid red;
+}
+
+.valid {
+  background-color: #efefef;
+  border: 0;
+}
