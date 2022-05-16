@@ -2,15 +2,14 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useState, useEffect } from "react";
 import axios from "axios";
-
 import Logo from "../../Assets/images/Logo.jpg";
 import DoneImage from "../../Assets/images/green-circle.png";
 
 export default function Done() {
   const navigate = useNavigate();
   const [myproducts,setMyproducts]=useState([]);
-  let totalPrice=0;
   const token=localStorage.getItem('token');
+  let totalPrice=0;
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,

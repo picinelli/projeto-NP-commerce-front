@@ -3,7 +3,6 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Logo from "../../Assets/images/Logo.jpg";
-import { ThreeDots } from "react-loader-spinner";
 export default function Checkout() {
   const navigate = useNavigate();
   const [myproducts,setMyproducts]=useState([]);
@@ -18,7 +17,6 @@ export default function Checkout() {
   const promise= axios.get("http://localhost:5000/myproducts",config)
   promise.then((res)=>{
     setMyproducts(res.data)
-    console.log(res.data)
   })
   promise.catch((e)=>{
     console.log(e)
@@ -59,6 +57,7 @@ export default function Checkout() {
           </Price>
         <button onClick={()=>{
           navigate("/done")
+
         }}>
           Finalizar
         </button>
@@ -94,7 +93,6 @@ export default function Checkout() {
        const promise= axios.get("http://localhost:5000/myproducts",config)
           promise.then((res)=>{
              setMyproducts(res.data)
-             console.log(res.data)
           })
           promise.catch((e)=>{
              console.log(e)
