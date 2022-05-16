@@ -6,10 +6,10 @@ import Logo from "../../Assets/images/Logo.jpg";
 import DoneImage from "../../Assets/images/green-circle.png";
 
 export default function Done() {
+  let totalPrice=0;
   const navigate = useNavigate();
   const [myproducts,setMyproducts]=useState([]);
   const token=localStorage.getItem('token');
-  let totalPrice=0;
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -19,6 +19,7 @@ export default function Done() {
     const promise= axios.get("http://localhost:5000/myproducts",config)
     promise.then((res)=>{
       setMyproducts(res.data)
+
     })
     promise.catch((e)=>{
       console.log(e)
@@ -48,6 +49,19 @@ export default function Done() {
         })}
         
         <h3>Total pago: R$ {totalPrice}</h3>
+
+        <div>
+          {myproducts.map((prod)=>{
+                    totalPrice+= prod.price;
+            return(
+              <>
+              <p>{prod.title}</p>
+              <hr></hr>
+              </>
+            )
+          })}
+        </div>
+        <h3>Total pago: R$ {(totalPrice*0.89).toFixed(2)}</h3>
         <WrapperBottom>
           <Botao onClick={() => {navigate("/products")}}>Voltar</Botao>
         </WrapperBottom>

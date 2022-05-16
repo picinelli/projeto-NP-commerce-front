@@ -3,7 +3,38 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Logo from "../../Assets/images/Logo.jpg";
+import { ThreeDots } from "react-loader-spinner";
+import sgMail from "@sendgrid/mail";
 export default function Checkout() {
+  // sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+  //   const msg = {
+//     to: 'natanismaelbrito@gmail.com',
+//     from: 'natanismaelbrito@gmail.com',
+//     subject: 'Sending with Twilio SendGrid is Fun',
+//     text: 'and easy to do anywhere, even with Node.js',
+//     html: '<strong>and message</strong>',
+//   };
+//   sgMail
+//   .send(msg)
+//   .then(() => {}, error => {
+//     console.error(error);
+
+//     if (error.response) {
+//       console.error(error.response.body)
+//     }
+//   });
+// //ES8
+// (async () => {
+//   try {
+//     await sgMail.send(msg);
+//   } catch (error) {
+//     console.error(error);
+
+//     if (error.response) {
+//       console.error(error.response.body)
+//     }
+//   }
+// })();
   const navigate = useNavigate();
   const [myproducts,setMyproducts]=useState([]);
   let totalPrice=0;
