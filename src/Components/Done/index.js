@@ -54,7 +54,10 @@ export default function Done() {
         </div>
         <h3>Total pago: R$ {(totalPrice*0.89).toFixed(2)}</h3>
         <WrapperBottom>
-          <Botao onClick={() => {navigate("/products")}}>Voltar</Botao>
+          <Botao onClick={() => {
+            navigate("/products")
+            
+            }}>Voltar</Botao>
         </WrapperBottom>
       </Wrapper>
     </Container>
