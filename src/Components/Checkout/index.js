@@ -58,15 +58,7 @@ export default function Checkout() {
           <span></span>
           </Price>
         <button onClick={()=>{
-            const promise=axios.post("http://localhost:5000/senddone",{},config)
-            promise.then((res)=>{
-              alert("tudo certo")
-              navigate("/done")
-            })
-          promise.catch((e)=>{
-            console.log(e)
-            return;
-          })
+          navigate("/done")
         }}>
           Finalizar
         </button>
