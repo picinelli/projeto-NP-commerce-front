@@ -22,7 +22,7 @@ export default function Login() {
   useEffect(() => {
     async function getAllUsers() {
       try {
-        setAllUsers(await axios.get("https://projeto-np-commerce-back.herokuapp.com/all-users"))
+        setAllUsers(await axios.get("http://localhost:5000/all-users"))
       } catch(e) {
         console.log("Nao foi possivel buscar os usuarios")
       }
@@ -86,7 +86,7 @@ export default function Login() {
   function handleSubmit(e) {
     e.preventDefault();
     setDisabled(true);
-    const promise = axios.post("https://projeto-np-commerce-back.herokuapp.com/sign-in", user);
+    const promise = axios.post("http://localhost:5000/sign-in", user);
     promise.then((res) => {
       setToken(res.data);
       JSON.stringify(localStorage.setItem("token", res.data.token));

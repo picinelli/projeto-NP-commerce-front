@@ -21,11 +21,11 @@ export default function Products() {
     };
     async function getProducts() {
       try {
-        setProducts(await axios.get("https://projeto-np-commerce-back.herokuapp.com/products"));
+        setProducts(await axios.get("http://localhost:5000/products"));
         setMyProducts(
-          await axios.get("https://projeto-np-commerce-back.herokuapp.com/myproducts", config)
+          await axios.get("http://localhost:5000/myproducts", config)
         );
-        setUser(await axios.get("https://projeto-np-commerce-back.herokuapp.com/user", config))
+        setUser(await axios.get("http://localhost:5000/user", config))
       } catch (e) {
         console.log(e);
       }
@@ -100,9 +100,9 @@ export default function Products() {
     };
 
     try {
-      await axios.post("https://projeto-np-commerce-back.herokuapp.com/products", product, config);
+      await axios.post("http://localhost:5000/products", product, config);
       setMyProducts(
-        await axios.get("https://projeto-np-commerce-back.herokuapp.com/myproducts", config)
+        await axios.get("http://localhost:5000/myproducts", config)
       );
     } catch (e) {
       console.log(e);
@@ -126,9 +126,9 @@ export default function Products() {
     };
 
     try {
-      await axios.post("https://projeto-np-commerce-back.herokuapp.com/products", product, config);
+      await axios.post("http://localhost:5000/products", product, config);
       setMyProducts(
-        await axios.get("https://projeto-np-commerce-back.herokuapp.com/myproducts", config)
+        await axios.get("http://localhost:5000/myproducts", config)
       );
     } catch (e) {
       console.log(e);
