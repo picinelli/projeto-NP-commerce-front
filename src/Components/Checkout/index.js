@@ -14,7 +14,7 @@ export default function Checkout() {
     },
   };
   useEffect(() => {
-    const promise = axios.get("http://localhost:5000/myproducts", config);
+    const promise = axios.get("https://projeto-np-commerce-back.herokuapp.com/myproducts", config);
     promise.then((res) => {
       setMyproducts(res.data);
     });
@@ -82,7 +82,7 @@ export default function Checkout() {
         <button
           onClick={ async () => {
             try {
-              await axios.post("http://localhost:5000/senddone", myproducts, config)
+              await axios.post("https://projeto-np-commerce-back.herokuapp.com/senddone", myproducts, config)
               console.log("passei por aqui")
             } catch(e) {
               console.log(e)
@@ -131,10 +131,10 @@ export default function Checkout() {
     if (window.confirm("deseja realmente tirar do seu carrinho?")) {
       try {
         await axios.delete(
-          `http://localhost:5000/deletemyproducts/${today}`,
+          `https://projeto-np-commerce-back.herokuapp.com/deletemyproducts/${today}`,
           config
         );
-        const promise = axios.get("http://localhost:5000/myproducts", config);
+        const promise = axios.get("https://projeto-np-commerce-back.herokuapp.com/myproducts", config);
         promise.then((res) => {
           setMyproducts(res.data);
         });
